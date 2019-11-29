@@ -1,2 +1,6 @@
 set -ex
-rpmbuild -ba SPECS/redis.spec --undefine=_disable_source_fetch
+mkdir BUILD &2>/dev/null
+
+rpmbuild -ba SPECS/redis.spec \
+  --undefine=_disable_source_fetch
+  --buildroot BUILD

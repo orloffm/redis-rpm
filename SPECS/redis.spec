@@ -11,16 +11,15 @@ Source0:          http://download.redis.io/releases/%{name}-%{version}.tar.gz
 #Source2:          %{name}.init
 # Update configuration
 #Patch0:           %{name}-2.4.8-redis.conf.patch
-BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}
 
 ExcludeArch:      ppc ppc64
 
-Requires:         logrotate
-Requires(post):   chkconfig
-Requires(postun): initscripts
-Requires(pre):    shadow-utils
-Requires(preun):  chkconfig
-Requires(preun):  initscripts
+# Requires:         logrotate
+# Requires(post):   chkconfig
+# Requires(postun): initscripts
+# Requires(pre):    shadow-utils
+# Requires(preun):  chkconfig
+# Requires(preun):  initscripts
 
 %description
 Redis is an advanced key-value store. It is similar to memcached but the data
