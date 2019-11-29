@@ -5,8 +5,6 @@ set -ex
 SCRIPT=$(readlink -f "$0")
 SCRIPTDIRPATH=$(dirname "$SCRIPT")
 
-mkdir BUILD &2>/dev/null
-
 rpmbuild -ba SPECS/redis.spec \
   --undefine=_disable_source_fetch \
-  --buildroot $SCRIPTDIRPATH/BUILD
+  --define "_topdir $SCRIPTDIRPATH"

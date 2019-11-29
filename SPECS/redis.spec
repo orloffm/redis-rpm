@@ -34,17 +34,21 @@ different kind of sorting abilities.
 #%patch0 -p1
 
 %build
-echo %{buildroot}
-# make %{?_smp_mflags} \
-#   DEBUG='' \
-#   CFLAGS='%{optflags}' \
-#   V=0 \
-#   all
+echo Build Root: %{buildroot}
+echo or $RPM_BUILD_ROOT
+echo TopDir: %{_topdir}
+echo BuildDir: $RPM_BUILD_DIR
+ make %{?_smp_mflags} \
+   DEBUG='' \
+   CFLAGS='%{optflags}' \
+   V=0 \
+   all
 
-# %install
-# rm -fr %{buildroot}
-# # _prefix = /usr/
-# make install PREFIX=%{buildroot}%{_prefix}
+%install
+echo install section
+rm -rf %{buildroot}
+# _prefix = /usr/
+make install PREFIX=%{buildroot}%{_prefix}
 # # Install misc other
 # #install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 # #install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
@@ -62,7 +66,7 @@ echo %{buildroot}
 # mkdir -p %{buildroot}%{_sbindir}
 # mv %{buildroot}%{_bindir}/%{name}-server %{buildroot}%{_sbindir}/%{name}-server
 
-# %clean
+%clean
 # rm -fr %{buildroot}
 
 # #%post
