@@ -35,60 +35,61 @@ different kind of sorting abilities.
 #%patch0 -p1
 
 %build
-make %{?_smp_mflags} \
-  DEBUG='' \
-  CFLAGS='%{optflags}' \
-  V=0 \
-  all
+echo %{buildroot}
+# make %{?_smp_mflags} \
+#   DEBUG='' \
+#   CFLAGS='%{optflags}' \
+#   V=0 \
+#   all
 
-%install
-rm -fr %{buildroot}
-# _prefix = /usr/
-make install PREFIX=%{buildroot}%{_prefix}
-# Install misc other
-#install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-#install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
-#install -p -D -m 644 %{name}.conf %{buildroot}%{_sysconfdir}/%{name}.conf
-#install -d -m 755 %{buildroot}%{_localstatedir}/lib/%{name}
-#install -d -m 755 %{buildroot}%{_localstatedir}/log/%{name}
-#install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
+# %install
+# rm -fr %{buildroot}
+# # _prefix = /usr/
+# make install PREFIX=%{buildroot}%{_prefix}
+# # Install misc other
+# #install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+# #install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
+# #install -p -D -m 644 %{name}.conf %{buildroot}%{_sysconfdir}/%{name}.conf
+# #install -d -m 755 %{buildroot}%{_localstatedir}/lib/%{name}
+# #install -d -m 755 %{buildroot}%{_localstatedir}/log/%{name}
+# #install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
 
-# Fix non-standard-executable-perm error
-# _bindir = /usr/bin
-chmod 755 %{buildroot}%{_bindir}/%{name}-*
+# # Fix non-standard-executable-perm error
+# # _bindir = /usr/bin
+# chmod 755 %{buildroot}%{_bindir}/%{name}-*
 
-# Ensure redis-server location doesn't change
-# _bindir = /usr/sbin
-mkdir -p %{buildroot}%{_sbindir}
-mv %{buildroot}%{_bindir}/%{name}-server %{buildroot}%{_sbindir}/%{name}-server
+# # Ensure redis-server location doesn't change
+# # _bindir = /usr/sbin
+# mkdir -p %{buildroot}%{_sbindir}
+# mv %{buildroot}%{_bindir}/%{name}-server %{buildroot}%{_sbindir}/%{name}-server
 
-%clean
-rm -fr %{buildroot}
+# %clean
+# rm -fr %{buildroot}
 
-#%post
-#/sbin/chkconfig --add redis
+# #%post
+# #/sbin/chkconfig --add redis
 
-# %pre
-# getent group redis &> /dev/null || groupadd -r redis &> /dev/null
-# getent passwd redis &> /dev/null || \
-# useradd -r -g redis -d %{_localstatedir}/lib/redis -s /sbin/nologin \
-# -c 'Redis Server' redis &> /dev/null
-# exit 0
+# # %pre
+# # getent group redis &> /dev/null || groupadd -r redis &> /dev/null
+# # getent passwd redis &> /dev/null || \
+# # useradd -r -g redis -d %{_localstatedir}/lib/redis -s /sbin/nologin \
+# # -c 'Redis Server' redis &> /dev/null
+# # exit 0
 
-%preun
-#if [ $1 = 0 ]; then
-#  /sbin/service redis stop &> /dev/null
-#  /sbin/chkconfig --del redis &> /dev/null
-#fi
+# %preun
+# #if [ $1 = 0 ]; then
+# #  /sbin/service redis stop &> /dev/null
+# #  /sbin/chkconfig --del redis &> /dev/null
+# #fi
 
-%files
-%defattr(-,root,root,-)
-#%doc 00-RELEASENOTES BUGS CONTRIBUTING COPYING README
-#%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
-#%config(noreplace) %{_sysconfdir}/%{name}.conf
-%dir %attr(0755, redis, root) %{_localstatedir}/lib/%{name}
-%dir %attr(0755, redis, root) %{_localstatedir}/log/%{name}
-%dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
-%{_bindir}/%{name}-*
-%{_sbindir}/%{name}-*
-%{_initrddir}/%{name}
+# %files
+# %defattr(-,root,root,-)
+# #%doc 00-RELEASENOTES BUGS CONTRIBUTING COPYING README
+# #%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+# #%config(noreplace) %{_sysconfdir}/%{name}.conf
+# %dir %attr(0755, redis, root) %{_localstatedir}/lib/%{name}
+# %dir %attr(0755, redis, root) %{_localstatedir}/log/%{name}
+# %dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
+# %{_bindir}/%{name}-*
+# %{_sbindir}/%{name}-*
+# %{_initrddir}/%{name}
