@@ -1,1 +1,1 @@
-wget http://download.redis.io/releases/redis-5.0.7.tar.gz -O SOURCES/
+rpmbuild -ba SPECS/prcredis.spec
