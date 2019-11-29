@@ -38,11 +38,12 @@ different kind of sorting abilities.
 make %{?_smp_mflags} \
   DEBUG='' \
   CFLAGS='%{optflags}' \
-  V=1 \
+  V=0 \
   all
 
 %install
 rm -fr %{buildroot}
+# _prefix = /usr/
 make install PREFIX=%{buildroot}%{_prefix}
 # Install misc other
 #install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
@@ -53,9 +54,11 @@ make install PREFIX=%{buildroot}%{_prefix}
 #install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
 
 # Fix non-standard-executable-perm error
+# _bindir = /usr/bin
 chmod 755 %{buildroot}%{_bindir}/%{name}-*
 
 # Ensure redis-server location doesn't change
+# _bindir = /usr/sbin
 mkdir -p %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/%{name}-server %{buildroot}%{_sbindir}/%{name}-server
 
