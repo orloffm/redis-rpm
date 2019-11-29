@@ -80,9 +80,9 @@ rm -fr %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc 00-RELEASENOTES BUGS CONTRIBUTING COPYING README
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}.conf
+#%doc 00-RELEASENOTES BUGS CONTRIBUTING COPYING README
+#%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+#%config(noreplace) %{_sysconfdir}/%{name}.conf
 %dir %attr(0755, redis, root) %{_localstatedir}/lib/%{name}
 %dir %attr(0755, redis, root) %{_localstatedir}/log/%{name}
 %dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
