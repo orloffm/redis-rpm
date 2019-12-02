@@ -45,6 +45,7 @@ fi
 # this file would get polluted with variables
 # and paths it doesn't need to know about.
 INTERMEDIATE_TARGZ=$RPM_TOPDIR/SOURCES/redis-binaries.tar.gz
+mkdir -p $RPM_TOPDIR/SOURCES
 if [ ! -e $INTERMEDIATE_TARGZ ]; then
   cd $REDIS_OUTPUT
   tar -cvzf $INTERMEDIATE_TARGZ *
@@ -56,3 +57,6 @@ cd $SCRIPTDIR
 rpmbuild -bb $RPM_TOPDIR/SPECS/redis-prc-core.spec \
   --define "_topdir $RPM_TOPDIR" \
   -v
+
+# And now copy the result here.
+cp -l rpmbuild/RPMS/x86_64/*.rpm .

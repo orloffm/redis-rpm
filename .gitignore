@@ -2,5 +2,7 @@ BUILDROOT/
 RPMS/
 BUILD/
 SRPMS/
+staging/
 *.gz
+*.rpm
 
