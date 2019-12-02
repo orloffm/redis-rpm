@@ -15,9 +15,20 @@ This installs Redis and makes basic configuration changes
 on the Linux machine.
 
 %prep
-# Extract binaries to BUILDROOT/cs/redis-prc
-mkdir -p %{csroot}
-tar -xvzf %{SOURCE0} -C %{csroot}
+# Extract binaries to BUILD.
+tar -xvzf %{SOURCE0} -C %{_builddir}
+
+%build
+# Nothing, as we don't compile anything.
+
+%install
+rm -rf %{buildroot}
+
+# Prepare the binaries folder.
+install -m 0755 -d %{csroot}/bin
+
+# The files from the intermediate archive.
+cp -lr bin/redis-* %{csroot}/bin/
 
 %files
 %defattr(-, %user, %user_group, -)
