@@ -4,7 +4,7 @@ REDIS_PRC_BASE=/cs/redis-prc
 REDIS_CLI=$REDIS_PRC_BASE/bin/redis-cli
 
 # Get the proper config file based on service name
-CONFIG_FILE="$REDIS_PRC/etc/redis.conf"
+CONFIG_FILE="$REDIS_PRC_BASE/etc/redis.conf"
 
 # Use awk to retrieve host, port from config file
 HOST=`awk '/^[[:blank:]]*bind/ { print $2 }' $CONFIG_FILE | tail -n1`
