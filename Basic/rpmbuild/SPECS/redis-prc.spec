@@ -59,6 +59,8 @@ install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
 %attr(755, %our_user, %our_group) %{csprefix}/bin/redis-*
 %{csprefix}/lib
 %attr(755, %our_user, %our_group) %{csprefix}/libexec
+%dir %attr(644, %our_user, %our_group) /cs/%{our_user}/redis
+%dir %attr(644, %our_user, %our_group) /cs/%{our_user}/redis/log
 
 # Installation scripts =================================================
 
@@ -87,8 +89,11 @@ chown -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
 if [ $1 -eq 1 ]; then
   echo Initial install, doing systemctl preset for the service...
   # Initial install.
-  systemctl preset %{csroot}/lib/%{name}.service >/dev/null 2>&1 || :
+  systemctl enable %{csroot}/lib/%{name}.service #>/dev/null 2>&1 || :
 fi
+
+systemctl start %{name}.service #>/dev/null 2>&1 || :
+systemctl status %{name}.service
 
 %preun
 if [ $1 -eq 0 ]; then
