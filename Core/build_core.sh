@@ -34,14 +34,14 @@ fi
 # Extract and build if not built previously.
 REDIS_OUTPUT=$STAGING_DIR/redis-binaries
 if [ ! -d $REDIS_FILE ]; then
-  tar -xvzf $REDIS_FILE_WEXT
+  tar -xvzf $REDIS_FILE_WEXT > /dev/null
   cd $REDIS_DIR
   
   # Compile silently.
-  make -s
+  make > /dev/null
 
   # Copy binaries to "output" subfolder.
-  make install PREFIX=$REDIS_OUTPUT
+  make install PREFIX=$REDIS_OUTPUT > /dev/null
 fi
 
 # Prepare the intermediate .tar.gz with binaries.
@@ -53,7 +53,7 @@ INTERMEDIATE_TARGZ=$RPM_TOPDIR/SOURCES/redis-binaries.tar.gz
 mkdir -p $RPM_TOPDIR/SOURCES
 if [ ! -e $INTERMEDIATE_TARGZ ]; then
   cd $REDIS_OUTPUT
-  tar -cvzf $INTERMEDIATE_TARGZ *
+  tar -cvzf $INTERMEDIATE_TARGZ * > /dev/null
 fi
 
 # Default config to SOURCES
