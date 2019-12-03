@@ -65,7 +65,7 @@ fi
 cd $SCRIPTDIR
 
 # Build the spec.
-rpmbuild -bb $RPM_TOPDIR/SPECS/redis-prc-core.spec \
+rpmbuild -bb $RPM_TOPDIR/SPECS/redis-prc.spec \
   --define "_topdir $RPM_TOPDIR" \
   -v
 
