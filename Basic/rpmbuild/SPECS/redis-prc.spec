@@ -42,17 +42,20 @@ install -m 0755 -d %{csroot}/bin
 cp -lr bin/redis-* %{csroot}/bin/
 
 # redis.conf -> /cs/redis-prc/etc/redis.conf
-install -p -D -m 644 redis.conf %{csroot}%{_sysconfdir}/redis.conf
+install -p -D -m 644 redis.conf %{csroot}/etc/redis.conf
 
 # redis-prc.service -> /cs/redis-prc/lib/redis-prc.service
 install -p -D -m 644 %{name}.service %{csroot}/lib/%{name}.service
 
-# redis-prc-shutdown.sh -> /cs/redis-prc/libexec/redis-prc-shutdown.sh
-install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
+# redis-prc-*.sh -> /cs/redis-prc/libexec/redis-prc-*.sh
+install -p -D -m 755 %{name}-s*.sh %{csroot}/libexec/%{name}-s*.sh
 
 %files
-%defattr(-, %our_user, %our_group, -)
-%{csprefix}
+%defattr(644, %our_user, %our_group, -)
+%config(noreplace) %{csprefix}/etc/redis.conf
+%attr(755, %our_user, %our_group) %{csprefix}/bin/redis-*
+%{csprefix}/lib
+%attr(755, %our_user, %our_group) %{csprefix}/libexec
 
 # Installation scripts
 
