@@ -53,14 +53,18 @@ install -p -D -m 644 %{name}.service %{csroot}/lib/%{name}.service
 install -p -D -m 755 %{name}-start.sh %{csroot}/libexec/%{name}-start.sh
 install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
 
+# Directory of prcuser we use for logs and DB dumps.
+install -m 755 -d %{buildroot}/cs/%{our_user}/redis/db
+install -m 755 -d %{buildroot}/cs/%{our_user}/redis/log
+
 %files
 %defattr(644, %our_user, %our_group, -)
 %config(noreplace) %{csprefix}/etc/redis.conf
 %attr(755, %our_user, %our_group) %{csprefix}/bin/redis-*
 %{csprefix}/lib
 %attr(755, %our_user, %our_group) %{csprefix}/libexec
-%dir %attr(644, %our_user, %our_group) /cs/%{our_user}/redis
-%dir %attr(644, %our_user, %our_group) /cs/%{our_user}/redis/log
+%dir /cs/%{our_user}/redis/db
+%dir /cs/%{our_user}/redis/log
 
 # Installation scripts =================================================
 
@@ -75,21 +79,19 @@ install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
   exit 1
 }
 
-# Needed.
-echo Setting Linux parameters...
-echo 1 > /proc/sys/vm/overcommit_memory
-echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
-
-# Setup home folder.
-echo Ensuring /cs/%{our_user}/redis is available...
-mkdir -p /cs/%{our_user}/redis
-chown -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
-
 %post
 if [ $1 -eq 1 ]; then
-  echo Initial install, doing systemctl preset for the service...
+  echo Initial install.
+  
+  echo Setting Linux parameters...
+  echo 1 > /proc/sys/vm/overcommit_memory
+  echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+
+  echo Ensuring /cs/%{our_user}/redis is owned by %{our_user}...
+  chown -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
+
   # Initial install.
-  systemctl enable %{csroot}/lib/%{name}.service #>/dev/null 2>&1 || :
+  systemctl enable %{csprefix}/lib/%{name}.service #>/dev/null 2>&1 || :
 fi
 
 systemctl start %{name}.service #>/dev/null 2>&1 || :

@@ -3,12 +3,12 @@ Description=Redis for PRC
 After=network.target
 
 [Service]
-ExecStart=/cs/redis-prc/bin/redis-server /cs/redis-prc/etc/redis.conf --supervised systemd
+ExecStart=/cs/redis-prc/libexec/redis-prc-start.sh
 ExecStop=/cs/redis-prc/libexec/redis-prc-stop.sh
 Type=notify
 User=prcuser
 Group=prcgroup
-RuntimeDirectory=redis
+RuntimeDirectory=/cs/prcuser/redis
 RuntimeDirectoryMode=0755
 
 [Install]
