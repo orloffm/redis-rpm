@@ -4,6 +4,5 @@ BUILD/
 SRPMS/
 staging/
 *.gz
-*.conf
 *.rpm
 

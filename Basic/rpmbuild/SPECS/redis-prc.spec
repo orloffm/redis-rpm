@@ -60,31 +60,27 @@ install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
 %{csprefix}/lib
 %attr(755, %our_user, %our_group) %{csprefix}/libexec
 
-# Installation scripts
+# Installation scripts =================================================
 
 %pre
 # Check user and group exist.
 (id %{our_user}) >/dev/null 2>&1 || {
-  echo "User %{our_user} does not exist.
+  echo "User %{our_user} does not exist."
   exit 1
 }
-(id -g %{our_group}) >/dev/null 2>&1 || {
-  echo "Group %{our_group} does not exist.
+(getent group %{our_group}) >/dev/null 2>&1 || {
+  echo "Group %{our_group} does not exist."
   exit 1
 }
-if [ ! -d /cs/%{our_user} ]; then
-  echo "Directory /cs/%{our_user} does not exist.
-  exit 1
-fi
 
 # Needed.
 echo 1 > /proc/sys/vm/overcommit_memory
 echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 
 # Setup home folder.
-@echo Ensuring /cs/%{our_user}/redis is available...
+echo Ensuring /cs/%{our_user}/redis is available...
 mkdir -p /cs/%{our_user}/redis
-chmod -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
+chown -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
 
 %post
 if [ $1 -eq 1 ]; then
