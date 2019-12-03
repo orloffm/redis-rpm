@@ -70,4 +70,8 @@ rpmbuild -bb $RPM_TOPDIR/SPECS/redis-prc-core.spec \
   -v
 
 # And now copy the result here.
+rm -f *.rpm
 cp -l rpmbuild/RPMS/x86_64/*.rpm .
+
+# Write contents of RPM for info.
+rpm -qlp *.rpm

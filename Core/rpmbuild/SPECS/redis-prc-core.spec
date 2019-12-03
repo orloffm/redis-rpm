@@ -7,6 +7,8 @@ Summary:	Installs Redis for PRC project
 License:	Credit Suisse Internal
 Source0:        redis-binaries.tar.gz
 Source1:	redis.conf
+Source2:	%{name}.service
+Source3:	%{name}-stop.sh
 
 %global csprefix /cs/%{name}
 %global csroot %{buildroot}%{csprefix}
@@ -18,7 +20,11 @@ on the Linux machine.
 %prep
 # Extract binaries to BUILD.
 tar -xvzf %{SOURCE0} -C %{_builddir}
+
+# Copy files from SOURCES to BUILD.
 cp %{SOURCE1} %{_builddir}
+cp %{SOURCE2} %{_builddir}
+cp %{SOURCE3} %{_builddir}
 
 %build
 # Nothing, as we don't compile anything.
@@ -35,6 +41,15 @@ cp -lr bin/redis-* %{csroot}/bin/
 
 # redis.conf -> /cs/redis-prc/etc/redis.conf
 install -p -D -m 644 redis.conf %{csroot}%{_sysconfdir}/redis.conf
+
+# redis-prc.service -> /cs/redis-prc/usr/lib/systemd/system/redis-prc.service
+install -p -D -m 644 %{name}.service %{csroot}%{_libdir}/systemd/system/%{name}.service
+
+# redis-prc-shutdown.sh -> /cs/redis-prc/usr/libexec/redis-prc-shutdown.sh
+install -p -D -m 755 %{name}-stop.sh %{csroot}%{_libexecdir}/%{name}-stop.sh
+
+# Create /cs/redis-prc/var/log/redis
+install -d -m 755 %{csroot}%{_localstatedir}/log
 
 %files
 %defattr(-, %user, %user_group, -)
