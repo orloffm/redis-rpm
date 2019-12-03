@@ -17,10 +17,12 @@ REDIS_URL=http://download.redis.io/releases/$REDIS_FILE_WEXT
 
 # This subdirectory is where the RPM magic happens.
 RPM_TOPDIR=$SCRIPTDIR/rpmbuild
+RPM_SOURCES=$RPM_TOPDIR/SOURCES
 
 # But first we download the sources and build them ourselves.
 # We'll do that in this folder.
 STAGING_DIR=$SCRIPTDIR/staging
+REDIS_DIR=$STAGING_DIR/$REDIS_FILE
 mkdir -p $STAGING_DIR
 cd $STAGING_DIR
 
@@ -33,9 +35,12 @@ fi
 REDIS_OUTPUT=$STAGING_DIR/redis-binaries
 if [ ! -d $REDIS_FILE ]; then
   tar -xvzf $REDIS_FILE_WEXT
-  cd $REDIS_FILE
-  make
-  # This copies binaries to "output" subfolder.
+  cd $REDIS_DIR
+  
+  # Compile silently.
+  make -s
+
+  # Copy binaries to "output" subfolder.
   make install PREFIX=$REDIS_OUTPUT
 fi
 
@@ -49,6 +54,12 @@ mkdir -p $RPM_TOPDIR/SOURCES
 if [ ! -e $INTERMEDIATE_TARGZ ]; then
   cd $REDIS_OUTPUT
   tar -cvzf $INTERMEDIATE_TARGZ *
+fi
+
+# Default config to SOURCES
+REDIS_CONF=$REDIS_DIR/redis.conf
+if [ ! -e $RPM_SOURCES/redis.conf ]; then
+  cp $REDIS_CONF $RPM_SOURCES
 fi
 
 cd $SCRIPTDIR
