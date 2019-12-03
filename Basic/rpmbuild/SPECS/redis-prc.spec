@@ -5,7 +5,7 @@ Release:	%{?dist}
 Packager:	mikhail.orlov@credit-suisse.com
 Summary:	Installs Redis for PRC project
 License:	Credit Suisse Internal
-Source0:        redis-binaries.tar.gz
+Source0:	redis-binaries.tar.gz
 Source1:	redis.conf
 Source2:	%{name}.service
 Source3:	%{name}-stop.sh
@@ -74,6 +74,7 @@ install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
 }
 
 # Needed.
+echo Setting Linux parameters...
 echo 1 > /proc/sys/vm/overcommit_memory
 echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 
@@ -84,12 +85,14 @@ chown -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
 
 %post
 if [ $1 -eq 1 ]; then
+  echo Initial install, doing systemctl preset for the service...
   # Initial install.
   systemctl preset %{csroot}/lib/%{name}.service >/dev/null 2>&1 || :
 fi
 
 %preun
 if [ $1 -eq 0 ]; then
+  echo Initial install, doing systemctl preset for the service...
   # Removal, not upgrade.
   systemctl --no-reload disable redis-prc.service > /dev/null 2>&1 || :
   systemctl stop %{name}.service > /dev/null 2>&1 || :
