@@ -9,6 +9,7 @@ Source0:        redis-binaries.tar.gz
 Source1:	redis.conf
 Source2:	%{name}.service
 Source3:	%{name}-stop.sh
+Source4:	%{name}-start.sh
 
 %global csprefix /cs/%{name}
 %global csroot %{buildroot}%{csprefix}
@@ -27,6 +28,7 @@ tar -xvzf %{SOURCE0} -C %{_builddir}
 cp %{SOURCE1} %{_builddir}
 cp %{SOURCE2} %{_builddir}
 cp %{SOURCE3} %{_builddir}
+cp %{SOURCE4} %{_builddir}
 
 %build
 # Nothing, as we don't compile anything.
@@ -48,7 +50,8 @@ install -p -D -m 644 redis.conf %{csroot}/etc/redis.conf
 install -p -D -m 644 %{name}.service %{csroot}/lib/%{name}.service
 
 # redis-prc-*.sh -> /cs/redis-prc/libexec/redis-prc-*.sh
-install -p -D -m 755 %{name}-s*.sh %{csroot}/libexec/%{name}-s*.sh
+install -p -D -m 755 %{name}-start.sh %{csroot}/libexec/%{name}-start.sh
+install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
 
 %files
 %defattr(644, %our_user, %our_group, -)
@@ -79,6 +82,7 @@ echo 1 > /proc/sys/vm/overcommit_memory
 echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 
 # Setup home folder.
+@echo Ensuring /cs/%{our_user}/redis is available...
 mkdir -p /cs/%{our_user}/redis
 chmod -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
 
