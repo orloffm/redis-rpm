@@ -15,6 +15,7 @@ Source4:	%{name}-start.sh
 %global csroot %{buildroot}%{csprefix}
 %global our_user prcuser
 %global our_group prcgroup
+%global our_user_redis %{our_user}/redis-prc
 
 %description
 This installs Redis and makes basic configuration changes
@@ -54,17 +55,17 @@ install -p -D -m 755 %{name}-start.sh %{csroot}/libexec/%{name}-start.sh
 install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
 
 # Directory of prcuser we use for logs and DB dumps.
-install -m 755 -d %{buildroot}/cs/%{our_user}/redis/db
-install -m 755 -d %{buildroot}/cs/%{our_user}/redis/log
+install -m 755 -d %{buildroot}/cs/%{our_user_redis}/db
+install -m 755 -d %{buildroot}/cs/%{our_user_redis}/log
 
 %files
-%defattr(644, %our_user, %our_group, -)
-%config(noreplace) %{csprefix}/etc/redis.conf
-%attr(755, %our_user, %our_group) %{csprefix}/bin/redis-*
-%{csprefix}/lib
-%attr(755, %our_user, %our_group) %{csprefix}/libexec
-%dir /cs/%{our_user}/redis/db
-%dir /cs/%{our_user}/redis/log
+%defattr(755, %our_user, %our_group, -)
+%config(noreplace) %attr(644, %our_user, %our_group)  %{csprefix}/etc/redis.conf
+%{csprefix}/bin/redis-*
+%attr(644, %our_user, %our_group) %{csprefix}/lib
+%{csprefix}/libexec
+%dir /cs/%{our_user_redis}/db
+%dir /cs/%{our_user_redis}/log
 
 # Installation scripts =================================================
 
@@ -87,19 +88,19 @@ if [ $1 -eq 1 ]; then
   echo 1 > /proc/sys/vm/overcommit_memory
   echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
 
-  echo Ensuring /cs/%{our_user}/redis is owned by %{our_user}...
-  chown -hR %{our_user}:%{our_group} /cs/%{our_user}/redis
+  echo Ensuring /cs/%{our_user_redis} is owned by %{our_user}...
+  chown -hR %{our_user}:%{our_group} /cs/%{our_user_redis}
 
   # Initial install.
-  systemctl enable %{csprefix}/lib/%{name}.service #>/dev/null 2>&1 || :
+  systemctl enable %{csprefix}/lib/%{name}.service
 fi
 
-systemctl start %{name}.service #>/dev/null 2>&1 || :
+systemctl start %{name}.service
 systemctl status %{name}.service
 
 %preun
 if [ $1 -eq 0 ]; then
-  echo Initial install, doing systemctl preset for the service...
+  echo Removal, not upgrade...
   # Removal, not upgrade.
   systemctl --no-reload disable redis-prc.service > /dev/null 2>&1 || :
   systemctl stop %{name}.service > /dev/null 2>&1 || :

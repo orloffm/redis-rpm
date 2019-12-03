@@ -5,10 +5,9 @@ After=network.target
 [Service]
 ExecStart=/cs/redis-prc/libexec/redis-prc-start.sh
 ExecStop=/cs/redis-prc/libexec/redis-prc-stop.sh
-Type=notify
 User=prcuser
 Group=prcgroup
-RuntimeDirectory=/cs/prcuser/redis
+RuntimeDirectory=/cs/prcuser/redis-prc
 RuntimeDirectoryMode=0755
 
 [Install]
