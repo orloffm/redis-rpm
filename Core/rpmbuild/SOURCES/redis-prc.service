@@ -1,13 +1,13 @@
 [Unit]
-Description=Redis persistent key-value database
+Description=Redis for PRC
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/redis-server /etc/redis.conf --supervised systemd
-ExecStop=/usr/libexec/redis-shutdown
+ExecStart=/cs/redis-prc/bin/redis-server /cs/redis-prc/etc/redis.conf --supervised systemd
+ExecStop=/cs/redis-prc/libexec/redis-prc-stop.sh
 Type=notify
-User=redis
-Group=redis
+User=prcuser
+Group=prcgroup
 RuntimeDirectory=redis
 RuntimeDirectoryMode=0755
 

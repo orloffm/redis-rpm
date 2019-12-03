@@ -42,14 +42,11 @@ cp -lr bin/redis-* %{csroot}/bin/
 # redis.conf -> /cs/redis-prc/etc/redis.conf
 install -p -D -m 644 redis.conf %{csroot}%{_sysconfdir}/redis.conf
 
-# redis-prc.service -> /cs/redis-prc/usr/lib/systemd/system/redis-prc.service
-install -p -D -m 644 %{name}.service %{csroot}%{_libdir}/systemd/system/%{name}.service
+# redis-prc.service -> /cs/redis-prc/lib/systemd/system/redis-prc.service
+install -p -D -m 644 %{name}.service %{csroot}/lib/systemd/system/%{name}.service
 
-# redis-prc-shutdown.sh -> /cs/redis-prc/usr/libexec/redis-prc-shutdown.sh
-install -p -D -m 755 %{name}-stop.sh %{csroot}%{_libexecdir}/%{name}-stop.sh
-
-# Create /cs/redis-prc/var/log/redis
-install -d -m 755 %{csroot}%{_localstatedir}/log
+# redis-prc-shutdown.sh -> /cs/redis-prc/libexec/redis-prc-shutdown.sh
+install -p -D -m 755 %{name}-stop.sh %{csroot}/libexec/%{name}-stop.sh
 
 %files
 %defattr(-, %user, %user_group, -)
